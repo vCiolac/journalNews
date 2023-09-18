@@ -7,7 +7,7 @@ Este é um projeto React que permite aos usuários acessarem notícias mais rece
 Para rodar este projeto localmente, siga estas etapas:
 
 1. Certifique-se de que você tem o Node.js instalado no seu computador.
-   Você pode baixá-lo em [https://nodejs.org/](https://nodejs.org/).
+    >Você pode baixá-lo em [https://nodejs.org/](https://nodejs.org/).
 
 2. Clone este repositório para o seu computador:
    >git clone git@github.com:vCiolac/journalNews.git
