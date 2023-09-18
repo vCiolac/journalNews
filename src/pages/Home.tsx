@@ -11,6 +11,8 @@ const Home = () => {
   const [titleFilter, setTitleFilter] = useState<string>('');
   const [filteredNews, setFilteredNews] = useState<NewsType[]>([]);
   const [searchClicked, setSearchClicked] = useState<boolean>(false);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [resetSearch, setResetSearch] = useState<boolean>(false);
 
   if (loading) return (<div>Carregando...</div>);
 
@@ -19,11 +21,19 @@ const Home = () => {
   const itemsPerPage = 9;
 
   const getNineNews = () => {
+    if (resetSearch) {
+      return news
+        .filter((item) => selectedType ? item.tipo === selectedType : true)
+        .slice(0, itemsPerPage);
+    }
     const finalNews = searchClicked ? filteredNews : news;
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return finalNews.slice(start, end);
+    return finalNews
+      .filter((item) => selectedType ? item.tipo === selectedType : true)
+      .slice(start, end);
   };
+
 
   const showOnlyFavorites = () => {
     const favorites: number[] = localStorageValue;
@@ -94,25 +104,24 @@ const Home = () => {
 
   const handleSearch = () => {
     const filteredNews = news.filter((item) => {
-      if (titleFilter && !item.titulo.toLowerCase().includes(titleFilter.toLowerCase())) {
-        return false;
-      }
-      return true;
+      const matchesTitle = titleFilter ? item.titulo.toLowerCase().includes(titleFilter.toLowerCase()) : true;
+      const matchesType = selectedType ? item.tipo === selectedType : true;
+      return matchesTitle && matchesType;
     });
-  
+
     setFilteredNews(filteredNews);
     setSearchClicked(true);
+    setResetSearch(false);
   };
-  
+
   const handleFilterByType = (type: string | null) => {
-    const filteredNews = news.filter((item) => {
-      if (type === null) {
-        return true; 
-      }
-      return item.tipo === type;
-    });
-    setFilteredNews(filteredNews);
-    setSearchClicked(true);
+    setSelectedType(type);
+  };
+
+  const handleResetFilters = () => {
+    setResetSearch(true);
+    handleFilterByType(null)
+    setTitleFilter('');
   };
 
   return (
@@ -126,16 +135,18 @@ const Home = () => {
           value={titleFilter}
           onChange={handleTitleFilterChange}
         />
-         <button type="button" onClick={handleSearch}>Pesquisar</button>
+        <button type="button" onClick={handleSearch}>Pesquisar</button>
         <button type="button" onClick={() => handleFilterByType(null)}>Todos</button>
         <button type="button" onClick={() => handleFilterByType("Notícia")}>Notícias</button>
         <button type="button" onClick={() => handleFilterByType("Release")}>Releases</button>
+        <button type="button" onClick={handleResetFilters}>Limpar</button>
       </div>
       <div>
         {theNews.map((item) => (
           <div key={item.id}>
             <h1>{item.titulo}</h1>
             <p>{item.introducao}</p>
+            <h3>{item.tipo}</h3>
             <button type="button" onClick={() => HandleClick(item.link)}>Ler mais</button>
             <button type="button" onClick={() => HandleFavorite(item.id)}>{isFavorite(item.id) ? 'Desfavoritar' : 'Favoritar'}</button>
             <h5>{calculateDate(item.data_publicacao)}</h5>
@@ -146,7 +157,7 @@ const Home = () => {
       {!showFavorites && currentPage > 1 && (
         <button type="button" onClick={handlePrevPage}>Página Anterior</button>
       )}
-      {!showFavorites && currentPage * itemsPerPage <= 100 && (
+      {!showFavorites && theNews.length >= 9 && (
         <button type="button" onClick={handleNextPage}>Próxima Página</button>
       )}
     </Fragment>
