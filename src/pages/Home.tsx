@@ -1,21 +1,28 @@
 import { Fragment, useState } from 'react';
 import { useFetch } from '../Hooks/useFetch';
 import useLocalStorage from '../Hooks/useLocalStorage';
+import { NewsType } from '../types';
 
 const Home = () => {
   const { news, loading, error } = useFetch();
   const { localStorageValue, updateValue } = useLocalStorage<number[]>('favorites', []);
   const [showFavorites, setShowFavorites] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [titleFilter, setTitleFilter] = useState<string>('');
+  const [filteredNews, setFilteredNews] = useState<NewsType[]>([]);
+  const [searchClicked, setSearchClicked] = useState<boolean>(false);
 
   if (loading) return (<div>Carregando...</div>);
 
   if (error) return (<div>{error}</div>);
 
+  const itemsPerPage = 9;
+
   const getNineNews = () => {
-    if (news?.length >= 9) {
-      return news.slice(0, 9);
-    }
-    return news;
+    const finalNews = searchClicked ? filteredNews : news;
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return finalNews.slice(start, end);
   };
 
   const showOnlyFavorites = () => {
@@ -23,7 +30,7 @@ const Home = () => {
     const favoritesNews = news.filter((item) => favorites.includes(item.id));
     return favoritesNews;
   };
-  
+
   const theNews = showFavorites ? showOnlyFavorites() : getNineNews();
 
   const HandleClick = (link: string) => {
@@ -71,22 +78,77 @@ const Home = () => {
     return `${days} dias atrás`;
   };
 
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleTitleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleFilter(event.target.value);
+  };
+
+  const handleSearch = () => {
+    const filteredNews = news.filter((item) => {
+      if (titleFilter && !item.titulo.toLowerCase().includes(titleFilter.toLowerCase())) {
+        return false;
+      }
+      return true;
+    });
+  
+    setFilteredNews(filteredNews);
+    setSearchClicked(true);
+  };
+  
+  const handleFilterByType = (type: string | null) => {
+    const filteredNews = news.filter((item) => {
+      if (type === null) {
+        return true; 
+      }
+      return item.tipo === type;
+    });
+    setFilteredNews(filteredNews);
+    setSearchClicked(true);
+  };
+
   return (
     <Fragment>
       <h1>Ultimas Noticias</h1>
       <button type="button" onClick={handleFilter}>{showFavorites ? 'Mostrar todas' : 'Mostrar favoritas'}</button>
       <div>
+        <input
+          type="text"
+          placeholder="Filtrar por título"
+          value={titleFilter}
+          onChange={handleTitleFilterChange}
+        />
+         <button type="button" onClick={handleSearch}>Pesquisar</button>
+        <button type="button" onClick={() => handleFilterByType(null)}>Todos</button>
+        <button type="button" onClick={() => handleFilterByType("Notícia")}>Notícias</button>
+        <button type="button" onClick={() => handleFilterByType("Release")}>Releases</button>
+      </div>
+      <div>
         {theNews.map((item) => (
           <div key={item.id}>
             <h1>{item.titulo}</h1>
             <p>{item.introducao}</p>
-            <button type="button" onClick={ () => HandleClick(item.link) }>Ler mais</button>
-            <button type="button" onClick={ () => HandleFavorite(item.id) }>{isFavorite(item.id) ? 'Desfavoritar' : 'Favoritar'}</button>
+            <button type="button" onClick={() => HandleClick(item.link)}>Ler mais</button>
+            <button type="button" onClick={() => HandleFavorite(item.id)}>{isFavorite(item.id) ? 'Desfavoritar' : 'Favoritar'}</button>
             <h5>{calculateDate(item.data_publicacao)}</h5>
             <span>{item.data_publicacao}</span>
           </div>
         ))}
       </div>
+      {!showFavorites && currentPage > 1 && (
+        <button type="button" onClick={handlePrevPage}>Página Anterior</button>
+      )}
+      {!showFavorites && currentPage * itemsPerPage <= 100 && (
+        <button type="button" onClick={handleNextPage}>Próxima Página</button>
+      )}
     </Fragment>
   );
 }
