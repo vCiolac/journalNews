@@ -31,11 +31,14 @@ Para rodar este projeto localmente, siga estas etapas:
 Neste projeto, foram utilizadas as seguintes ferramentas e técnicas:
 
 ![React](https://img.shields.io/badge/React-%2320232a?style=for-the-badge&logo=react&logoColor=%2361DAFB): Biblioteca JavaScript para construção da interface do usuário.
--
+
+
 ![Vite](https://img.shields.io/badge/Vite-brightgreen): Ferramenta de build rápida para projetos modernos em JavaScript.
--
+
+
 ![Material-UI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white): Biblioteca de componentes de interface do usuário para React.
--
+
+
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white): Superset do JavaScript que adiciona tipagem estática ao código.
 
 
