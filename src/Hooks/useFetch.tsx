@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NewsType } from '../components/types';
+import { NewsType } from '../types';
 
 export function useFetch() {
   const [news, setNews] = useState<NewsType[]>([]);
