@@ -33,20 +33,24 @@ function Copyright() {
 
 const defaultTheme = createTheme({
   palette: {
+    background: {
+      paper: '#FEF8D9',
+      default: '#3BA4A4',
+    },
     primary: {
-      main: '#606c38',
+      main: '#006064',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#432818',
+      main: '#713C1C',
       contrastText: '#000',
     },
     success: {
-      main: '#283618',
+      main: '#39393A',
       contrastText: '#fff',
     },
     error: {
-      main: '#bc6c25',
+      main: '#A6271B',
       contrastText: '#000',
     },
   },
@@ -184,7 +188,7 @@ const Home = () => {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            pt: 8,
+            pt: 2,
             pb: 6,
           }}
         >
@@ -204,7 +208,6 @@ const Home = () => {
               Explore artigos e análises baseados em dados confiáveis para ficar por dentro das histórias que moldam nosso mundo.
             </Typography>
             <Stack
-              sx={{ pt: 4 }}
               direction="column"
               spacing={1}
               justifyContent="center"
@@ -224,7 +227,7 @@ const Home = () => {
             </Stack>
           </Container>
         </Box>
-        <Container sx={{ py: 8 }} maxWidth="md">
+        <Container sx={{ paddingTop: 8 }} maxWidth="md">
           <Grid container spacing={4}>
             {theNews.map((news) => (
               <Grid item key={news.id} xs={12} sm={6} md={4}>
@@ -266,7 +269,7 @@ const Home = () => {
         </Container>
       </main>
       <Stack
-        sx={{ pt: 4 }}
+        sx={{ pt: 4, marginBottom: 4 }}
         direction="row"
         spacing={1}
         justifyContent="center">
@@ -277,7 +280,7 @@ const Home = () => {
           <Button color="secondary" variant="outlined" type="button" size="small" onClick={handleNextPage}>Próxima Página</Button>
         )}
       </Stack>
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Box sx={{ bgcolor: 'background.paper', py: 0.1 }} component="footer">
         <Copyright />
       </Box>
     </ThemeProvider>
