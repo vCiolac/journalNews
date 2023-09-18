@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useFetch } from '../Hooks/useFetch';
 import useLocalStorage from '../Hooks/useLocalStorage';
@@ -121,7 +122,7 @@ const Home = () => {
   };
 
   const calculateDate = (dateString: string) => {
-    const dateParts = dateString.split(/[\s/:\-]+/);
+    const dateParts = dateString.split(/[\s/:\\-]+/);
     const year = parseInt(dateParts[2]);
     const month = parseInt(dateParts[1]) - 1;
     const day = parseInt(dateParts[0]);
