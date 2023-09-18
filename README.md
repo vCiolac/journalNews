@@ -6,7 +6,8 @@ Este é um projeto React que permite aos usuários acessarem notícias mais rece
 
 Para rodar este projeto localmente, siga estas etapas:
 
-1. Certifique-se de que você tem o Node.js instalado no seu computador. Você pode baixá-lo em [https://nodejs.org/](https://nodejs.org/).
+1. Certifique-se de que você tem o Node.js instalado no seu computador.
+   Você pode baixá-lo em [https://nodejs.org/](https://nodejs.org/).
 
 2. Clone este repositório para o seu computador:
    >git clone git@github.com:vCiolac/journalNews.git
@@ -16,13 +17,9 @@ Para rodar este projeto localmente, siga estas etapas:
 
 4. Instale as dependências do projeto utilizando npm ou yarn:
     >npm install
-    # ou
-    >yarn install
 
 5. Inicie o servidor de desenvolvimento:
     >npm run dev
-    # ou
-    >yarn dev
 
 6. Abra seu navegador e acesse http://localhost:sua-porta para visualizar a aplicação.
 
