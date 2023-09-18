@@ -1,7 +1,56 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useFetch } from '../Hooks/useFetch';
 import useLocalStorage from '../Hooks/useLocalStorage';
 import { NewsType } from '../types';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CssBaseline from '@mui/material/CssBaseline';
+import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FormControlLabel, Switch, TextField } from '@mui/material';
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://vciolac.vercel.app/">
+        Victor Ciolac
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#606c38',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#432818',
+      contrastText: '#000',
+    },
+    success: {
+      main: '#283618',
+      contrastText: '#fff',
+    },
+    error: {
+      main: '#bc6c25',
+      contrastText: '#000',
+    },
+  },
+});
 
 const Home = () => {
   const { news, loading, error } = useFetch();
@@ -115,6 +164,10 @@ const Home = () => {
   };
 
   const handleFilterByType = (type: string | null) => {
+    if (type === selectedType) {
+      setSelectedType(null);
+      return;
+    }
     setSelectedType(type);
   };
 
@@ -125,42 +178,109 @@ const Home = () => {
   };
 
   return (
-    <Fragment>
-      <h1>Ultimas Noticias</h1>
-      <button type="button" onClick={handleFilter}>{showFavorites ? 'Mostrar todas' : 'Mostrar favoritas'}</button>
-      <div>
-        <input
-          type="text"
-          placeholder="Filtrar por título"
-          value={titleFilter}
-          onChange={handleTitleFilterChange}
-        />
-        <button type="button" onClick={handleSearch}>Pesquisar</button>
-        <button type="button" onClick={() => handleFilterByType(null)}>Todos</button>
-        <button type="button" onClick={() => handleFilterByType("Notícia")}>Notícias</button>
-        <button type="button" onClick={() => handleFilterByType("Release")}>Releases</button>
-        <button type="button" onClick={handleResetFilters}>Limpar</button>
-      </div>
-      <div>
-        {theNews.map((item) => (
-          <div key={item.id}>
-            <h1>{item.titulo}</h1>
-            <p>{item.introducao}</p>
-            <h3>{item.tipo}</h3>
-            <button type="button" onClick={() => HandleClick(item.link)}>Ler mais</button>
-            <button type="button" onClick={() => HandleFavorite(item.id)}>{isFavorite(item.id) ? 'Desfavoritar' : 'Favoritar'}</button>
-            <h5>{calculateDate(item.data_publicacao)}</h5>
-            <span>{item.data_publicacao}</span>
-          </div>
-        ))}
-      </div>
-      {!showFavorites && currentPage > 1 && (
-        <button type="button" onClick={handlePrevPage}>Página Anterior</button>
-      )}
-      {!showFavorites && theNews.length >= 9 && (
-        <button type="button" onClick={handleNextPage}>Próxima Página</button>
-      )}
-    </Fragment>
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      <main>
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            pt: 8,
+            pb: 6,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              Termo News
+            </Typography>
+            <Typography variant="h6" align="center" color="text.secondary" paragraph>
+              Bem-vindo!
+              Aqui você encontrará informações atualizadas diretamente do Instituto Brasileiro de Geografia e Estatística (IBGE).
+              Explore artigos e análises baseados em dados confiáveis para ficar por dentro das histórias que moldam nosso mundo.
+            </Typography>
+            <Stack
+              sx={{ pt: 4 }}
+              direction="column"
+              spacing={1}
+              justifyContent="center"
+            >
+              <Button sx={{ paddingX: 8 }} size="small" color="error" onClick={handleFilter} variant="outlined">{showFavorites ? 'Mostrar todas' : 'Mostrar favoritos'}</Button>
+              <TextField onChange={handleTitleFilterChange} value={titleFilter} type="search" id="outlined-search" label="Filtrar por título" variant="outlined" />
+              <Button color="success" onClick={handleSearch} endIcon={<SendIcon />} variant="outlined">Pesquisar</Button>
+              <Button onClick={handleResetFilters} endIcon={<DeleteIcon />} variant="outlined">Limpar</Button>
+            </Stack>
+            <Stack
+              sx={{ pt: 4 }}
+              direction="row"
+              spacing={1}
+              justifyContent="center">
+              <FormControlLabel onClick={() => handleFilterByType("Notícia")} control={<Switch checked={selectedType === "Notícia"}/>} label="Notícias" />
+              <FormControlLabel onClick={() => handleFilterByType("Release")} control={<Switch checked={selectedType === "Release"}/>} label="Releases" />
+            </Stack>
+          </Container>
+        </Box>
+        <Container sx={{ py: 8 }} maxWidth="md">
+          <Grid container spacing={4}>
+            {theNews.map((news) => (
+              <Grid item key={news.id} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {news.titulo}
+                    </Typography>
+                    {news.tipo}
+                    <Typography>
+                      {news.introducao}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Stack
+                      direction="row" >
+                      <Button color='success' variant='outlined' onClick={() => HandleClick(news.link)} size="small">Ler mais</Button>
+                      <Button color='error' variant='outlined' onClick={() => HandleFavorite(news.id)} size="small">{isFavorite(news.id) ? 'Desfavoritar' : 'Favoritar'}</Button>
+                    </Stack>
+                  </CardActions>
+                  <Stack
+                    direction="column"
+                    spacing={1}
+                    alignItems='center'
+                  >
+                    <Typography gutterBottom variant="subtitle1" component="h6">
+                      {calculateDate(news.data_publicacao)}
+                    </Typography>
+                    <Typography gutterBottom variant="caption" component="span">
+                      {news.data_publicacao}
+                    </Typography>
+                  </Stack>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+      <Stack
+        sx={{ pt: 4 }}
+        direction="row"
+        spacing={1}
+        justifyContent="center">
+        {!showFavorites && currentPage > 1 && (
+          <Button color="secondary" variant="outlined" type="button" size="small" onClick={handlePrevPage}>Página Anterior</Button>
+        )}
+        {!showFavorites && theNews.length >= 9 && (
+          <Button color="secondary" variant="outlined" type="button" size="small" onClick={handleNextPage}>Próxima Página</Button>
+        )}
+      </Stack>
+      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+        <Copyright />
+      </Box>
+    </ThemeProvider>
   );
 }
 
