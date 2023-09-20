@@ -17,7 +17,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FormControlLabel, Switch, TextField } from '@mui/material';
+import { CardMedia, FormControlLabel, Switch, TextField } from '@mui/material';
 
 function Copyright() {
   return (
@@ -92,8 +92,23 @@ const Home = () => {
   const showOnlyFavorites = () => {
     const favorites: number[] = localStorageValue;
     const favoritesNews = news.filter((item) => favorites.includes(item.id));
-    return favoritesNews;
+
+    const filteredFavoritesNews = favoritesNews.filter((item) =>
+      selectedType ? item.tipo === selectedType : true
+    );
+
+    if (searchClicked) {
+      const filteredFavoritesWithTitle = filteredFavoritesNews.filter((item) =>
+        titleFilter ? item.titulo.toLowerCase().includes(titleFilter.toLowerCase()) : true
+      );
+      return filteredFavoritesWithTitle;
+    } else {
+      return filteredFavoritesNews;
+    }
   };
+
+
+
 
   const theNews = showFavorites ? showOnlyFavorites() : getNineNews();
 
@@ -180,6 +195,13 @@ const Home = () => {
     setResetSearch(true);
     handleFilterByType(null)
     setTitleFilter('');
+    setSearchClicked(false);
+  };
+
+  const handleImg = (img: string) => {
+    const imagesData = JSON.parse(img);
+    const introImageURL = imagesData.image_intro;
+    return `https://agenciadenoticias.ibge.gov.br/${introImageURL}`;
   };
 
   return (
@@ -223,8 +245,8 @@ const Home = () => {
               direction="row"
               spacing={1}
               justifyContent="center">
-              <FormControlLabel onClick={() => handleFilterByType("Notícia")} control={<Switch checked={selectedType === "Notícia"}/>} label="Notícias" />
-              <FormControlLabel onClick={() => handleFilterByType("Release")} control={<Switch checked={selectedType === "Release"}/>} label="Releases" />
+              <FormControlLabel onClick={() => handleFilterByType("Notícia")} control={<Switch checked={selectedType === "Notícia"} />} label="Notícias" />
+              <FormControlLabel onClick={() => handleFilterByType("Release")} control={<Switch checked={selectedType === "Release"} />} label="Releases" />
             </Stack>
           </Container>
         </Box>
@@ -236,10 +258,20 @@ const Home = () => {
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
                 >
                   <CardContent sx={{ flexGrow: 1 }}>
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      // 16:9
+                      mt: -0.5,
+                      mb: 1,
+                      pt: '56.25%',
+                      borderRadius: '3%',
+                    }}
+                    image={handleImg(news.imagens)}
+                  />
                     <Typography gutterBottom variant="h5" component="h2">
                       {news.titulo}
                     </Typography>
-                    {news.tipo}
                     <Typography>
                       {news.introducao}
                     </Typography>
