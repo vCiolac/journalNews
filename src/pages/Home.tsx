@@ -18,6 +18,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CardMedia, FormControlLabel, Switch, TextField } from '@mui/material';
+import Loading from './Loading';
 
 function Copyright() {
   return (
@@ -68,7 +69,7 @@ const Home = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [resetSearch, setResetSearch] = useState<boolean>(false);
 
-  if (loading) return (<div>Carregando...</div>);
+  if (loading) return (<Loading />);
 
   if (error) return (<div>{error}</div>);
 
@@ -88,7 +89,6 @@ const Home = () => {
       .slice(start, end);
   };
 
-
   const showOnlyFavorites = () => {
     const favorites: number[] = localStorageValue;
     const favoritesNews = news.filter((item) => favorites.includes(item.id));
@@ -106,9 +106,6 @@ const Home = () => {
       return filteredFavoritesNews;
     }
   };
-
-
-
 
   const theNews = showFavorites ? showOnlyFavorites() : getNineNews();
 
