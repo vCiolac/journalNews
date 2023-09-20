@@ -1,4 +1,4 @@
-import React from "react";
+/* eslint-disable react/react-in-jsx-scope */
 import { Box, Typography } from "@mui/material";
 
 function Loading() {
