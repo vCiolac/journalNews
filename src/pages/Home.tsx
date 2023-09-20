@@ -18,7 +18,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CardMedia, FormControlLabel, Switch, TextField } from '@mui/material';
-import Loading from './Loading';
+import Loading from '../component/Loading';
 
 function Copyright() {
   return (
