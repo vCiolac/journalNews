@@ -21,7 +21,7 @@ Para rodar este projeto localmente, siga estas etapas:
 5. Inicie o servidor de desenvolvimento:
     >npm run dev
 
-6. Abra seu navegador e acesse http://localhost:sua-porta para visualizar a aplicação.
+6. Abra seu navegador e acesse http://localhost:3000/ para visualizar a aplicação.
 
 ## Técnicas e Ferramentas Utilizadas
 
