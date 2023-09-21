@@ -2,6 +2,10 @@
 
 Este é um projeto React que permite aos usuários acessarem notícias mais recentes do Instituto Brasileiro de Geografia e Estatística (IBGE). Os usuários podem ler as notícias completas, favoritar as notícias de seu interesse, filtrar as notícias por título e tipo. E também ver a informação de sua data e há quantos dias atrás cada notícia foi publicada.
 
+# Deploy do projeto
+
+https://termo-news.vercel.app/
+
 ## Como Rodar o Projeto Localmente
 
 Para rodar este projeto localmente, siga estas etapas:
