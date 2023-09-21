@@ -19,7 +19,6 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppBar, CardMedia, FormControlLabel, Switch, TextField, Toolbar } from '@mui/material';
 import Loading from '../component/Loading';
-import PaperSVG from '../assets/paper.svg'
 
 function Copyright() {
   return (
